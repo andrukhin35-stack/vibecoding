@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Python Camp — курс по Python в одном файле</title>
+  <style>
+    :root { --primary: #3776ab; --bg: #f5f7fa; --card: #ffffff; --text: #2d3436; --accent: #e74c3c; --success: #2ecc71; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.5; }
+    header { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+    nav a { color: rgba(255,255,255,.85); margin-left: 16px; text-decoration: none; cursor: pointer; }
+    nav a:hover { color: white; }
+    main { padding: 2rem; max-width: 960px; margin: 0 auto; }
+    .section { background: var(--card); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,.06); margin-bottom: 2rem; }
+    h2 { color: var(--primary); }
+    code { background: #2d3436; color: #f1f1f1; padding: .2em .4em; border-radius: 4px; font-family: ui-monospace, SFMono, Menlo, monospace; }
+    pre { background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 6px; overflow-x: auto; }
+    pre code { background: transparent; padding: 0; }
+    .task { border-left: 5px solid var(--accent); padding-left: 1rem; margin-top: 1.2rem; background: rgba(231,76,60,.05); }
+    textarea { width: 100%; height: 120px; font-family: ui-monospace, SFMono, Menlo, monospace; padding: .5rem; border: 1px solid #ccc; border-radius: 6px; background: #fff; }
+    button { background: var(--primary); color: white; border: none; padding: .6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 500; }
+    button:hover { background: #2f6690; }
+    .result { margin-top: .8rem; padding: .7rem; border-radius: 6px; display: none; }
+    .success { background: rgba(46,204,113,.15); color: var(--success); border: 1px solid var(--success); }
+    .error { background: rgba(231,76,60,.15); color: var(--accent); border: 1px solid var(--accent); }
+    footer { text-align: center; padding: 2rem; color: #888; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1 style="margin:0;font-size:1.4rem;">Python Camp</h1>
+      <small>Мини-курс по Python в одном файле</small>
+    </div>
+    <nav>
+      <a onclick="scrollToSection('intro')">Введение</a>
+      <a onclick="scrollToSection('basics')">Основы</a>
+      <a onclick="scrollToSection('loops')">Циклы и условия</a>
+      <a onclick="scrollToSection('functions')">Функции</a>
+      <a onclick="scrollToSection('files')">Файлы и модули</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="intro" class="section">
+      <h2>1. Введение</h2>
+      <p>Python — высокоуровневый язык программирования общего назначения. Его отличают простота синтаксиса, читаемость и богатая стандартная библиотека.</p>
+      <p><strong>Как запустить код:</strong></p>
+      <ul>
+        <li>Локально: <code>python main.py</code></li>
+        <li>Онлайн: repl.it, Google Colab, PythonAnywhere</li>
+      </ul>
+      <div class="task">
+        <p><strong>Задание 1:</strong> Напиши программу, которая выводит «Hello, Python Camp!»</p>
+        <textarea id="task1" placeholder="print(...)"></textarea>
+        <br><br>
+        <button onclick="checkTask(1)">Проверить</button>
+        <div id="result1" class="result"></div>
+      </div>
+    </section>
+
+    <section id="basics" class="section">
+      <h2>2. Основы: переменные, типы, ввод/вывод</h2>
+      <p>В Python тип переменной определяется автоматически. Основные типы: <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>.</p>
+      <pre><code># Пример
+name = "Alice"
+age = 25
+height = 1.75
+is_student = True
+
+print(f"Привет, {name}. Тебе {age} лет.")</code></pre>
+      <div class="task">
+        <p><strong>Задание 2:</strong> Создай переменные <code>city</code> (строка) и <code>population</code> (число). Выведи фразу: «В городе [city] проживает [population] человек.»</p>
+        <textarea id="task2" placeholder="city = ...&#10;population = ...&#10;print(...)"></textarea>
+        <br><br>
+        <button onclick="checkTask(2)">Проверить</button>
+        <div id="result2" class="result"></div>
+      </div>
+    </section>
+
+    <section id="loops" class="section">
+      <h2>3. Циклы и условия</h2>
+      <p>Цикл <code>for</code> используется для перебора последовательностей, <code>while</code> — пока условие истинно. Условие <code>if/elif/else</code> управляет ветвлением.</p>
+      <pre><code>numbers = [1, 2, 3, 4, 5]
+for n in numbers:
+    if n % 2 == 0:
+        print(f"{n} — чётное")
+    else:
+        print(f"{n} — нечётное")</code></pre>
+      <div class="task">
+        <p><strong>Задание 3:</strong> Выведи все числа от 1 до 10, которые делятся на 3 без остатка.</p>
+        <textarea id="task3" placeholder="for i in range(...):&#10;    if ...:&#10;        print(...)"></textarea>
+        <br><br>
+        <button onclick="checkTask(3)">Проверить</button>
+        <div id="result3" class="result"></div>
+      </div>
+    </section>
+
+    <section id="functions" class="section">
+      <h2>4. Функции</h2>
+      <p>Функция — это блок кода, который можно вызывать многократно. Она может принимать аргументы и возвращать результат.</p>
+      <pre><code>def greet(name, greeting="Привет"):
+    return f"{greeting}, {name}!"
+
+message = greet("Bob")
+print(message)  # Привет, Bob!</code></pre>
+      <div class="task">
+        <p><strong>Задание 4:</strong> Напиши функцию <code>square(x)</code>, которая возвращает квадрат числа <code>x</code>. Вызови её для числа 7 и выведи результат.</p>
+        <textarea id="task4" placeholder="def square(x):&#10;    ...&#10;print(square(7))"></textarea>
+        <br><br>
+        <button onclick="checkTask(4)">Проверить</button>
+        <div id="result4" class="result"></div>
+      </div>
+    </section>
+
+    <section id="files" class="section">
+      <h2>5. Файлы и модули</h2>
+      <p>Для работы с файлами используется конструкция <code>with open(...)</code>. Она гарантирует корректное закрытие файла.</p>
+      <pre><code>with open("data.txt", "w", encoding="utf-8") as f:
+    f.write("Привет, мир!")
+
+with open("data.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+    print(content)</code></pre>
+      <p>Модули позволяют разбивать код на логические части. Например, <code>import math</code>.</p>
+    </section>
+  </main>
+
+  <footer>
+    Python Camp — учебный проект в одном файле. Не заменяет полноценный курс, но даёт быстрый старт.
+  </footer>
+
+  <script>
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Простая эмуляция проверки кода: ищем ключевые слова и шаблоны
+    function checkTask(taskId) {
+      const input = document.getElementById(`task${taskId}`).value.trim();
+      const resultBox = document.getElementById(`result${taskId}`);
+      resultBox.className = 'result';
+      resultBox.style.display = 'block';
+
+      try {
+        if (taskId === 1) {
+          if (input.includes('print') && input.includes('Hello, Python Camp')) {
+            resultBox.textContent = '✅ Отлично! Задание выполнено.';
+            resultBox.classList.add('success');
+          } else {
+            resultBox.textContent = '❌ Проверьте, что вы используете print и выводите именно «Hello, Python Camp!».';
+            resultBox.classList.add('error');
+          }
+        } else if (taskId === 2) {
+          if (input.includes('city') && input.includes('population') && input.includes('print')) {
+            resultBox.textContent = '✅ Хорошо! Главное — логика верна.';
+            resultBox.classList.add('success');
+          } else {
+            resultBox.textContent = '❌ Убедитесь, что создали переменные city и population и вывели фразу через print.';
+            resultBox.classList.add('error');
+          }
+        } else if (taskId === 3) {
+          if ((input.includes('for') || input.includes('while')) && input.includes('% 3 == 0') && input.includes('print')) {
+            resultBox.textContent = '✅ Верно! Вы нашли числа, делящиеся на 3.';
+            resultBox.classList.add('success');
+          } else {
+            resultBox.textContent = '❌ Попробуйте использовать цикл и условие (i % 3 == 0).';
+            resultBox.classList.add('error');
+          }
+        } else if (taskId === 4) {
+          if (input.includes('def square') && input.includes('return') && input.includes('square(7)')) {
+            resultBox.textContent = '✅ Отличная функция! Квадрат 7 — это 49.';
+            resultBox.classList.add('success');
+          } else {
+            resultBox.textContent = '❌ Проверьте определение функции square(x), return и вызов square(7).';
+            resultBox.classList.add('error');
+          }
+        }
+      } catch (e) {
+        resultBox.textContent = '❌ Ошибка при проверке. Проверьте синтаксис.';
+        resultBox.classList.add('error');
+      }
+    }
+  </script>
+</body>
+</html>

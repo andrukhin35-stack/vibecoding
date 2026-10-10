@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PythonCamp — аналог freeCodeCamp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: #0a0c10;
+            color: #e4e6eb;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Шапка */
+        .header {
+            background: #0f1217;
+            border-bottom: 1px solid #2a2f3a;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #3776ab, #ffd43b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo span {
+            font-weight: 300;
+            color: #9aa4b8;
+            -webkit-text-fill-color: #9aa4b8;
+            background: none;
+        }
+
+        .badge {
+            background: #1e2a3a;
+            color: #7aa9d9;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #2d4055;
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.9rem;
+            color: #b0b8c5;
+        }
+
+        .progress-bar-header {
+            width: 140px;
+            height: 8px;
+            background: #1f262e;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill-header {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3776ab, #ffd43b);
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        /* Основной контент */
+        .main {
+            display: flex;
+            flex: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        /* Боковая панель — модули */
+        .sidebar {
+            flex: 1 1 260px;
+            background: #0f1217;
+            border-radius: 24px;
+            border: 1px solid #1f262e;
+            padding: 20px 10px 20px 20px;
+            height: fit-content;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            position: sticky;
+            top: 90px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8f9bb3;
+            margin-bottom: 16px;
+            padding-left: 8px;
+            font-weight: 500;
+        }
+
+        .module-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .module-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: background 0.15s;
+            color: #b4bed2;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border: 1px solid transparent;
+        }
+
+        .module-item:hover {
+            background: #171e27;
+        }
+
+        .module-item.active {
+            background: #18222e;
+            border-color: #2e4258;
+            color: #e9ecf2;
+        }
+
+        .module-item .icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .module-item .module-progress {
+            margin-left: auto;
+            font-size: 0.75rem;
+            background: #1c252f;
+            padding: 2px 8px;
+            border-radius: 40px;
+            color: #8393aa;
+        }
+
+        /* Правая часть — уроки */
+        .content {
+            flex: 3 1 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .lesson-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #f0f3f8;
+        }
+
+        .lesson-title small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #7f8b9f;
+            margin-left: 12px;
+        }
+
+        .lesson-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background: #1d2632;
+            border: 1px solid #2f3c4c;
+            color: #cbd5e3;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #25303e;
+            border-color: #3e5066;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #2b5f8a;
+            border-color: #3776ab;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #3776ab;
+        }
+
+        .btn-success {
+            background: #2b6e4e;
+            border-color: #3b8f62;
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #3b8f62;
+        }
+
+        /* Карточки теории и заданий */
+        .theory-card, .task-card {
+            background: #0f1217;
+            border: 1px solid #1f262e;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .theory-card h3, .task-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 18px;
+            color: #d6deeb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .theory-content {
+            line-height: 1.7;
+            color: #c2cbda;
+            font-size: 1rem;
+        }
+
+        .theory-content p {
+            margin-bottom: 16px;
+        }
+
+        .theory-content code {
+            background: #1b222b;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #ffd43b;
+            border: 1px solid #2c3643;
+        }
+
+        .theory-content pre {
+            background: #0b0f14;
+            border: 1px solid #1e2833;
+            border-radius: 16px;
+            padding: 18px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #d4e0f0;
+            margin: 18px 0;
+            line-height: 1.5;
+        }
+
+        .theory-content ul {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        .theory-content li {
+            margin-bottom: 8px;
+        }
+
+        /* Редактор кода */
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #8d9bb0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .code-editor {
+            width: 100%;
+            height: 180px;
+            background: #0b0f14;
+            border: 1px solid #26303d;
+            border-radius: 18px;
+            padding: 18px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e0e8f5;
+            resize: vertical;
+            outline: none;
+            transition: border 0.15s;
+        }
+
+        .code-editor:focus {
+            border-color: #3776ab;
+            box-shadow: 0 0 0 2px rgba(55, 118, 171, 0.3);
+        }
+
+        .test-output {
+            background: #0b0f14;
+            border: 1px solid #1e2833;
+            border-radius: 18px;
+            padding: 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            min-height: 70px;
+            color: #b8c7dd;
+            line-height: 1.5;
+        }
+
+        .test-pass {
+            color: #5fcf80;
+        }
+
+        .test-fail {
+            color: #ff7b72;
+        }
+
+        .test-output .test-pass::before {
+            content: "✓ ";
+            color: #5fcf80;
+            font-weight: bold;
+        }
+
+        .test-output .test-fail::before {
+            content: "✗ ";
+            color: #ff7b72;
+            font-weight: bold;
+        }
+
+        /* Прогресс внизу */
+        .progress-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #0f1217;
+            border: 1px solid #1f262e;
+            border-radius: 100px;
+            padding: 12px 24px;
+            margin-top: 8px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: #98a6bd;
+            white-space: nowrap;
+        }
+
+        .progress-bar-main {
+            flex: 1;
+            height: 10px;
+            background: #1b222b;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill-main {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3776ab, #ffd43b);
+            border-radius: 20px;
+            transition: width 0.4s ease;
+        }
+
+        /* Адаптив */
+        @media (max-width: 900px) {
+            .sidebar {
+                position: static;
+                max-height: none;
+                width: 100%;
+                flex: 1 1 100%;
+            }
+
+            .main {
+                flex-direction: column;
+            }
+
+            .lesson-title {
+                font-size: 1.4rem;
+            }
+
+            .lesson-title small {
+                display: block;
+                margin-left: 0;
+                margin-top: 4px;
+            }
+        }
+
+        /* Скролл */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0b0f14;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #2b3646;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3e4f64;
+        }
+
+        .completed-icon {
+            color: #5fcf80;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo-area">
+        <div class="logo">Python<span>Camp</span></div>
+        <div class="badge">freeCodeCamp аналог</div>
+    </div>
+    <div class="progress-header">
+        <span>Прогресс</span>
+        <div class="progress-bar-header">
+            <div class="progress-fill-header" id="headerProgressFill" style="width: 0%;"></div>
+        </div>
+        <span id="headerProgressText">0 / 8</span>
+    </div>
+</header>
+
+<div class="main">
+    <!-- Сайдбар: список модулей -->
+    <aside class="sidebar">
+        <h2>📘 Модули</h2>
+        <div class="module-list" id="moduleList">
+            <!-- динамически заполняется -->
+        </div>
+    </aside>
+
+    <!-- Основной контент -->
+    <main class="content" id="contentArea">
+        <!-- Заполняется через JS -->
+    </main>
+</div>
+
+<script>
+    // ========== ДАННЫЕ КУРСА ==========
+    const courseData = [
+        {
+            id: 'intro',
+            title: 'Введение в Python',
+            icon: '🐍',
+            lessons: [
+                {
+                    id: 'intro-1',
+                    title: 'Что такое Python?',
+                    theory: `
+                        <p><strong>Python</strong> — это высокоуровневый язык программирования общего назначения, созданный Гвидо ван Россумом и впервые выпущенный в 1991 году. Он известен своим лаконичным синтаксисом, который делает код читаемым и понятным.</p>
+                        <p>Python используется в веб-разработке, анализе данных, машинном обучении, автоматизации, научных вычислениях и многих других областях.</p>
+                        <p>Вот пример простой программы на Python:</p>
+                        <pre>print("Привет, мир!")</pre>
+                        <p>Эта строка выводит текст на экран. <code>print()</code> — это встроенная функция.</p>
+                    `,
+                    task: 'Напишите программу, которая выводит "Привет, Python!"',
+                    initialCode: '# Напишите ваш код здесь\n',
+                    solution: 'print("Привет, Python!")',
+                    check: (code) => {
+                        const cleaned = code.replace(/\s/g, '');
+                        if (cleaned.includes('print("Привет,Python!")') || cleaned.includes("print('Привет,Python!')")) {
+                            return { passed: true, message: 'Отлично! Вывод верный.' };
+                        }
+                        return { passed: false, message: 'Попробуйте вывести именно "Привет, Python!" с помощью print().' };
+                    }
+                },
+                {
+                    id: 'intro-2',
+                    title: 'Переменные и типы данных',
+                    theory: `
+                        <p>Переменная — это именованная область памяти для хранения данных. В Python не нужно объявлять тип переменной заранее.</p>
+                        <pre>name = "Анна"\nage = 25\nheight = 1.65\nis_student = True</pre>
+                        <p>Основные типы: <code>str</code> (строка), <code>int</code> (целое), <code>float</code> (дробное), <code>bool</code> (логический).</p>
+                        <p>Узнать тип можно с помощью <code>type()</code>.</p>
+                    `,
+                    task: 'Создайте переменные: city = "Москва", population = 13000000, area = 2561.5. Выведите их значения через print().',
+                    initialCode: '# Создайте переменные и выведите их\n',
+                    solution: 'city = "Москва"\npopulation = 13000000\narea = 2561.5\nprint(city)\nprint(population)\nprint(area)',
+                    check: (code) => {
+                        const hasCity = /city\s*=\s*["']Москва["']/.test(code);
+                        const hasPop = /population\s*=\s*13000000/.test(code);
+                        const hasArea = /area\s*=\s*2561\.5/.test(code);
+                        if (hasCity && hasPop && hasArea) {
+                            return { passed: true, message: 'Все переменные созданы верно!' };
+                        }
+                        return { passed: false, message: 'Проверьте: city = "Москва", population = 13000000, area = 2561.5' };
+                    }
+                }
+            ]
+        },
+        {
+            id: 'basics',
+            title: 'Основы синтаксиса',
+            icon: '📐',
+            lessons: [
+                {
+                    id: 'basics-1',
+                    title: 'Условные операторы if',
+                    theory: `
+                        <p>Условные операторы позволяют выполнять разный код в зависимости от условий.</p>
+                        <pre>age = 18\nif age >= 18:\n    print("Доступ разрешён")\nelse:\n    print("Доступ запрещён")</pre>
+                        <p>Отступы в Python — это часть синтаксиса! Они обозначают блоки кода. Используйте 4 пробела.</p>
+                        <p>Можно использовать <code>elif</code> для дополнительных условий.</p>
+                    `,
+                    task: 'Напишите программу: если переменная score больше или равна 60, выведите "Сдал", иначе — "Не сдал". score = 75',
+                    initialCode: 'score = 75\n# Ваш код\n',
+                    solution: 'score = 75\nif score >= 60:\n    print("Сдал")\nelse:\n    print("Не сдал")',
+                    check: (code) => {
+                        const hasIf = /if\s+score\s*>=\s*60\s*:/.test(code);
+                        const hasPass = /print\s*\(\s*["']Сдал["']\s*\)/.test(code);
+                        const hasElse = /else\s*:/.test(code);
+                        const hasFail = /print\s*\(\s*["']Не\s+сдал["']\s*\)/.test(code);
+                        if (hasIf && hasPass && hasElse && hasFail) {
+                            return { passed: true, message: 'Условие работает правильно!' };
+                        }
+                        return { passed: false, message: 'Используйте if score >= 60: ... else: ... с правильными сообщениями.' };
+                    }
+                },
+                {
+                    id: 'basics-2',
+                    title: 'Циклы for и while',
+                    theory: `
+                        <p>Циклы позволяют повторять код несколько раз.</p>
+                        <p><strong>for</strong> используется для перебора последовательностей:</p>
+                        <pre>for i in range(5):\n    print(i)</pre>
+                        <p><strong>while</strong> выполняется, пока условие истинно:</p>
+                        <pre>count = 0\nwhile count < 3:\n    print(count)\n    count += 1</pre>
+                    `,
+                    task: 'Напишите цикл, который выводит числа от 1 до 5 включительно, каждое с новой строки.',
+                    initialCode: '# Используйте for или while\n',
+                    solution: 'for i in range(1, 6):\n    print(i)',
+                    check: (code) => {
+                        const cleaned = code.replace(/\s/g, '');
+                        const hasRange = /range\(1,\s*6\)/.test(cleaned) || /range\(1,6\)/.test(cleaned);
+                        const hasPrint = /print\(i\)/.test(cleaned);
+                        const hasWhile = /while/.test(cleaned);
+                        // Проверяем либо for range(1,6) либо while с выводом
+                        if ((hasRange && hasPrint) || (hasWhile && /print/.test(cleaned))) {
+                            return { passed: true, message: 'Цикл написан верно!' };
+                        }
+                        return { passed: false, message: 'Используйте for i in range(1, 6): print(i)' };
+                    }
+                }
+            ]
+        },
+        {
+            id: 'functions',
+            title: 'Функции',
+            icon: '⚙️',
+            lessons: [
+                {
+                    id: 'func-1',
+                    title: 'Определение функций',
+                    theory: `
+                        <p>Функции позволяют группировать код для повторного использования.</p>
+                        <pre>def greet(name):\n    return f"Привет, {name}!"\n\nmessage = greet("Мир")\nprint(message)</pre>
+                        <p><code>def</code> — ключевое слово для определения функции. <code>return</code> возвращает результат.</p>
+                        <p>Параметры указываются в скобках.</p>
+                    `,
+                    task: 'Создайте функцию add(a, b), которая возвращает сумму a и b. Вызовите её с 3 и 7 и выведите результат.',
+                    initialCode: '# Определите функцию add\n',
+                    solution: 'def add(a, b):\n    return a + b\n\nprint(add(3, 7))',
+                    check: (code) => {
+                        const hasDef = /def\s+add\s*\(\s*a\s*,\s*b\s*\)/.test(code);
+                        const hasReturn = /return\s+a\s*\+\s*b/.test(code);
+                        const hasCall = /add\s*\(\s*3\s*,\s*7\s*\)/.test(code);
+                        if (hasDef && hasReturn && hasCall) {
+                            return { passed: true, message: 'Функция определена и вызвана правильно!' };
+                        }
+                        return { passed: false, message: 'Создайте def add(a, b): return a + b и вызовите add(3, 7).' };
+                    }
+                },
+                {
+                    id: 'func-2',
+                    title: 'Аргументы по умолчанию',
+                    theory: `
+                        <p>Можно задавать значения параметров по умолчанию:</p>
+                        <pre>def power(base, exponent=2):\n    return base ** exponent\n\nprint(power(3))    # 9\nprint(power(3, 3)) # 27</pre>
+                        <p>Если аргумент не передан, используется значение по умолчанию.</p>
+                    `,
+                    task: 'Создайте функцию multiply(a, b=2), которая возвращает произведение. Выведите multiply(5) и multiply(5, 3).',
+                    initialCode: '# Ваша функция\n',
+                    solution: 'def multiply(a, b=2):\n    return a * b\n\nprint(multiply(5))\nprint(multiply(5, 3))',
+                    check: (code) => {
+                        const hasDef = /def\s+multiply\s*\(\s*a\s*,\s*b\s*=\s*2\s*\)/.test(code);
+                        const hasReturn = /return\s+a\s*\*\s*b/.test(code);
+                        const hasCall1 = /multiply\s*\(\s*5\s*\)/.test(code);
+                        const hasCall2 = /multiply\s*\(\s*5\s*,\s*3\s*\)/.test(code);
+                        if (hasDef && hasReturn && hasCall1 && hasCall2) {
+                            return { passed: true, message: 'Отлично! Аргументы по умолчанию работают.' };
+                        }
+                        return { passed: false, message: 'Проверьте: def multiply(a, b=2): return a * b, затем вызовы multiply(5) и multiply(5, 3).' };
+                    }
+                }
+            ]
+        },
+        {
+            id: 'collections',
+            title: 'Коллекции',
+            icon: '📦',
+            lessons: [
+                {
+                    id: 'coll-1',
+                    title: 'Списки (list)',
+                    theory: `
+                        <p>Списки — упорядоченные изменяемые коллекции.</p>
+                        <pre>fruits = ["яблоко", "банан", "вишня"]\nprint(fruits[0])      # яблоко\nfruits.append("груша")\nprint(len(fruits))    # 4</pre>
+                        <p>Элементы индексируются с 0. Можно использовать срезы: <code>fruits[1:3]</code>.</p>
+                    `,
+                    task: 'Создайте список numbers = [10, 20, 30, 40, 50]. Выведите первый и последний элемент.',
+                    initialCode: '# Работа со списком\n',
+                    solution: 'numbers = [10, 20, 30, 40, 50]\nprint(numbers[0])\nprint(numbers[-1])',
+                    check: (code) => {
+                        const hasList = /numbers\s*=\s*\[\s*10\s*,\s*20\s*,\s*30\s*,\s*40\s*,\s*50\s*\]/.test(code);
+                        const hasFirst = /print\s*\(\s*numbers\s*\[\s*0\s*\]\s*\)/.test(code);
+                        const hasLast = /print\s*\(\s*numbers\s*\[\s*-1\s*\]\s*\)/.test(code);
+                        if (hasList && hasFirst && hasLast) {
+                            return { passed: true, message: 'Список и индексы использованы верно!' };
+                        }
+                        return { passed: false, message: 'Создайте numbers = [10, 20, 30, 40, 50] и выведите numbers[0] и numbers[-1].' };
+                    }
+                },
+                {
+                    id: 'coll-2',
+                    title: 'Словари (dict)',
+                    theory: `
+                        <p>Словари хранят пары ключ-значение.</p>
+                        <pre>person = {"name": "Иван", "age": 30}\nprint(person["name"])   # Иван\nperson["city"] = "СПб"\nprint(person)</pre>
+                        <p>Ключи должны быть неизменяемыми. Доступ по ключу через квадратные скобки.</p>
+                    `,
+                    task: 'Создайте словарь student = {"name": "Алексей", "grade": 5}. Выведите значение по ключу "name".',
+                    initialCode: '# Словарь\n',
+                    solution: 'student = {"name": "Алексей", "grade": 5}\nprint(student["name"])',
+                    check: (code) => {
+                        const hasDict = /student\s*=\s*\{\s*["']name["']\s*:\s*["']Алексей["']\s*,\s*["']grade["']\s*:\s*5\s*\}/.test(code);
+                        const hasPrint = /print\s*\(\s*student\s*\[\s*["']name["']\s*\]\s*\)/.test(code);
+                        if (hasDict && hasPrint) {
+                            return { passed: true, message: 'Словарь создан и доступ выполнен верно!' };
+                        }
+                        return { passed: false, message: 'Создайте student = {"name": "Алексей", "grade": 5} и выведите student["name"].' };
+                    }
+                }
+            ]
+        }
+    ];
+
+    // ========== СОСТОЯНИЕ ==========
+    let currentModuleIndex = 0;
+    let currentLessonIndex = 0;
+    // Прогресс: объект { lessonId: true/false }
+    let progress = {};
+
+    // Собираем все уроки в плоский список для подсчёта
+    const allLessons = courseData.flatMap(module => module.lessons);
+
+    // ========== ФУНКЦИИ РЕНДЕРИНГА ==========
+
+    function renderSidebar() {
+        const container = document.getElementById('moduleList');
+        container.innerHTML = '';
+
+        courseData.forEach((module, idx) => {
+            const moduleItem = document.createElement('div');
+            moduleItem.className = `module-item ${idx === currentModuleIndex ? 'active' : ''}`;
+            moduleItem.dataset.index = idx;
+
+            // Прогресс по модулю
+            const total = module.lessons.length;
+            const completed = module.lessons.filter(l => progress[l.id]).length;
+            const progressText = `${completed}/${total}`;
+
+            moduleItem.innerHTML = `
+                <span class="icon">${module.icon}</span>
+                <span>${module.title}</span>
+                <span class="module-progress">${progressText}</span>
+            `;
+
+            moduleItem.addEventListener('click', () => {
+                currentModuleIndex = idx;
+                currentLessonIndex = 0;
+                renderSidebar();
+                renderContent();
+                updateProgressBars();
+            });
+
+            container.appendChild(moduleItem);
+        });
+    }
+
+    function renderContent() {
+        const contentArea = document.getElementById('contentArea');
+        const module = courseData[currentModuleIndex];
+        const lesson = module.lessons[currentLessonIndex];
+
+        // Проверяем, пройден ли урок
+        const isCompleted = progress[lesson.id] === true;
+
+        contentArea.innerHTML = `
+            <div class="lesson-header">
+                <div class="lesson-title">
+                    ${lesson.title}
+                    <small>${module.title} • Урок ${currentLessonIndex + 1} из ${module.lessons.length}</small>
+                </div>
+                <div class="lesson-nav">
+                    <button class="btn" id="prevBtn" ${currentLessonIndex === 0 && currentModuleIndex === 0 ? 'disabled' : ''}>
+                        ← Назад
+                    </button>
+                    <button class="btn" id="nextBtn" ${currentModuleIndex === courseData.length - 1 && currentLessonIndex === module.lessons.length - 1 ? 'disabled' : ''}>
+                        Вперёд →
+                    </button>
+                </div>
+            </div>
+
+            <div class="theory-card">
+                <h3>📖 Теория</h3>
+                <div class="theory-content">
+                    ${lesson.theory}
+                </div>
+            </div>
+
+            <div class="task-card">
+                <h3>💻 Практика ${isCompleted ? '✅' : ''}</h3>
+                <p style="color: #9aa9c0; margin-bottom: 20px; font-size: 1.05rem;">${lesson.task}</p>
+                <div class="editor-section">
+                    <div class="editor-header">
+                        <span>Редактор Python</span>
+                        <span style="font-size:0.8rem; color: #64748b;">Напишите код и нажмите "Проверить"</span>
+                    </div>
+                    <textarea class="code-editor" id="codeEditor" spellcheck="false">${lesson.initialCode || '# Ваш код здесь\n'}</textarea>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" id="checkBtn">✓ Проверить решение</button>
+                        <button class="btn btn-success" id="completeBtn" ${isCompleted ? 'disabled' : ''}>${isCompleted ? 'Урок пройден' : 'Отметить как выполненное'}</button>
+                    </div>
+                    <div class="test-output" id="testOutput">
+                        ${isCompleted ? '<span class="test-pass">Урок уже пройден!</span>' : 'Здесь появится результат проверки...'}
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <span class="progress-text">Прогресс курса</span>
+                <div class="progress-bar-main">
+                    <div class="progress-fill-main" id="mainProgressFill" style="width: 0%;"></div>
+                </div>
+                <span class="progress-text" id="mainProgressText">0 / ${allLessons.length}</span>
+            </div>
+        `;
+
+        // Заполняем редактор
+        const editor = document.getElementById('codeEditor');
+        if (editor) {
+            editor.value = lesson.initialCode || '# Ваш код здесь\n';
+            // Восстанавливаем сохранённый код? Можно сохранять в localStorage, но для простоты оставим.
+        }
+
+        // Обработчики кнопок
+        document.getElementById('prevBtn')?.addEventListener('click', () => {
+            if (currentLessonIndex > 0) {
+                currentLessonIndex--;
+            } else if (currentModuleIndex > 0) {
+                currentModuleIndex--;
+                currentLessonIndex = courseData[currentModuleIndex].lessons.length - 1;
+            }
+            renderSidebar();
+            renderContent();
+            updateProgressBars();
+        });
+
+        document.getElementById('nextBtn')?.addEventListener('click', () => {
+            const module = courseData[currentModuleIndex];
+            if (currentLessonIndex < module.lessons.length - 1) {
+                currentLessonIndex++;
+            } else if (currentModuleIndex < courseData.length - 1) {
+                currentModuleIndex++;
+                currentLessonIndex = 0;
+            }
+            renderSidebar();
+            renderContent();
+            updateProgressBars();
+        });
+
+        document.getElementById('checkBtn')?.addEventListener('click', () => {
+            const code = document.getElementById('codeEditor').value;
+            const result = lesson.check(code);
+            const output = document.getElementById('testOutput');
+            if (result.passed) {
+                output.innerHTML = `<span class="test-pass">${result.message}</span>`;
+                // Автоматически отмечаем как выполненное
+                if (!progress[lesson.id]) {
+                    progress[lesson.id] = true;
+                    renderSidebar();
+                    updateProgressBars();
+                    // Перерисовываем задание (галочка)
+                    renderContent();
+                }
+            } else {
+                output.innerHTML = `<span class="test-fail">${result.message}</span>`;
+            }
+        });
+
+        document.getElementById('completeBtn')?.addEventListener('click', () => {
+            progress[lesson.id] = true;
+            renderSidebar();
+            updateProgressBars();
+            renderContent();
+        });
+
+        updateProgressBars();
+    }
+
+    function updateProgressBars() {
+        const completed = allLessons.filter(l => progress[l.id]).length;
+        const total = allLessons.length;
+        const percent = total > 0 ? (completed / total) * 100 : 0;
+
+        // Обновляем прогресс в шапке
+        document.getElementById('headerProgressFill').style.width = percent + '%';
+        document.getElementById('headerProgressText').textContent = `${completed} / ${total}`;
+
+        // Обновляем главный прогресс (если есть)
+        const mainFill = document.getElementById('mainProgressFill');
+        const mainText = document.getElementById('mainProgressText');
+        if (mainFill) mainFill.style.width = percent + '%';
+        if (mainText) mainText.textContent = `${completed} / ${total}`;
+    }
+
+    // Инициализация
+    function init() {
+        // Восстанавливаем прогресс из localStorage (опционально)
+        try {
+            const saved = localStorage.getItem('pythonCampProgress');
+            if (saved) {
+                progress = JSON.parse(saved);
+            }
+        } catch (e) { /* ignore */ }
+
+        renderSidebar();
+        renderContent();
+        updateProgressBars();
+
+        // Сохраняем прогресс при изменении
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('pythonCampProgress', JSON.stringify(progress));
+        });
+    }
+
+    // Запуск
+    init();
+
+    // Сохраняем прогресс периодически
+    setInterval(() => {
+        localStorage.setItem('pythonCampProgress', JSON.stringify(progress));
+    }, 3000);
+</script>
+</body>
+</html>
